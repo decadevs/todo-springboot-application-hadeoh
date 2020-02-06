@@ -113,4 +113,22 @@ public class TaskTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(containsString("Task not found")));
     }
+
+    @Test
+    public void getTasksByStatusCorrectly() throws Exception {
+
+        mockMvc.perform(get("/tasks/status/done"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("All done tasks successfully retrieved")));
+    }
+
+    @Test
+    public void getTasksByStatusWithWrongValue() throws Exception {
+
+        mockMvc.perform(get("/tasks/status/finished"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("No finished task found")));
+    }
 }

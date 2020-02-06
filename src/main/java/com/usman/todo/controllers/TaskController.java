@@ -60,4 +60,32 @@ public class TaskController {
         response.setStatus(statusCode.value());
         return new MyResponse<>(statusCode, message, task);
     }
+
+    @GetMapping
+    @RequestMapping("/status/{status}")
+    public MyResponse<List<TaskModel>> getTasksByStatus(@PathVariable String status, HttpServletResponse response) {
+        List<TaskModel> tasks = taskService.getTasksByStatus(status);
+        String message = String.format("All %s tasks successfully retrieved", status);
+        HttpStatus statusCode = HttpStatus.OK;
+        if (tasks == null) {
+            message = String.format("No %s task found", status);
+            statusCode = HttpStatus.NOT_FOUND;
+        }
+        response.setStatus(statusCode.value());
+        return new MyResponse<>(statusCode, message, tasks);
+    }
+
+    @PatchMapping
+    @RequestMapping("{id}")
+    public MyResponse<TaskModel> getATask(@PathVariable Integer id, HttpServletResponse response) {
+        TaskModel task = taskService.getATask(id);
+        String message = "Task successfully retrieved";
+        HttpStatus statusCode = HttpStatus.OK;
+        if (task == null) {
+            message = "Task not found";
+            statusCode = HttpStatus.NOT_FOUND;
+        }
+        response.setStatus(statusCode.value());
+        return new MyResponse<>(statusCode, message, task);
+    }
 }
