@@ -95,4 +95,22 @@ public class TaskTest {
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("test is good to write for efficient applications")));
     }
+
+    @Test
+    public void getATaskWithoutErrors() throws Exception {
+
+        mockMvc.perform(get("/tasks/1"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("test is good to write for efficient applications")));
+    }
+
+    @Test
+    public void getATaskThatIsNotPresent() throws Exception {
+
+        mockMvc.perform(get("/tasks/88"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Task not found")));
+    }
 }

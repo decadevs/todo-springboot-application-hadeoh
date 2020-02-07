@@ -46,4 +46,18 @@ public class TaskController {
         response.setStatus((statusCode.value()));
         return new MyResponse<>(statusCode, message, allTasks);
     }
+
+    @GetMapping
+    @RequestMapping("{id}")
+    public MyResponse<TaskModel> getATask(@PathVariable Integer id, HttpServletResponse response) {
+        TaskModel task = taskService.getATask(id);
+        String message = "Task successfully retrieved";
+        HttpStatus statusCode = HttpStatus.OK;
+        if (task == null) {
+            message = "Task not found";
+            statusCode = HttpStatus.NOT_FOUND;
+        }
+        response.setStatus(statusCode.value());
+        return new MyResponse<>(statusCode, message, task);
+    }
 }

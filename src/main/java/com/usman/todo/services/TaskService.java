@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -31,5 +32,13 @@ public class TaskService {
 
     public List<TaskModel> getAllTasks() {
         return taskRepository.findAll(Sort.by((Sort.Direction.ASC), "id"));
+    }
+
+    public TaskModel getATask(Integer id) {
+        Optional<TaskModel> task = taskRepository.findById(id);
+        if (task.isEmpty()) {
+            return null;
+        }
+        return task.get();
     }
 }
