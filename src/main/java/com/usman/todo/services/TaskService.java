@@ -41,4 +41,12 @@ public class TaskService {
         }
         return task.get();
     }
+
+    public List<TaskModel> getTasksByStatus(String status) {
+        List<TaskModel> tasks = taskRepository.findByStatus(status);
+        if (tasks.isEmpty()) {
+            return null;
+        }
+        return tasks;
+    }
 }
