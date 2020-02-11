@@ -4,12 +4,14 @@ import com.usman.todo.models.TaskModel;
 import com.usman.todo.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/tasks")
 public class TaskController {
 
@@ -20,49 +22,34 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @PostMapping
-    public MyResponse<TaskModel> createTask(@RequestBody TaskModel task, HttpServletResponse response) {
+    @GetMapping("/add")
+    public String showCreateTask(Model model) {
+        model.addAttribute("create", true);
+        model.addAttribute("task", new TaskModel());
+        return "add";
+    }
 
-        TaskModel taskToBeCreated = taskService.createTask(task);
-        HttpStatus statusCode = HttpStatus.CREATED;
-        String message = "Task successfully created";
-        if (taskToBeCreated == null) {
-            statusCode = HttpStatus.UNPROCESSABLE_ENTITY;
-            message = "You just made a bad request";
-        }
-        response.setStatus(statusCode.value());
-        return new MyResponse<>(statusCode, message, taskToBeCreated);
+    @PostMapping("/create")
+    public String createTask(TaskModel task) {
+        taskService.createTask(task);
+        return "redirect:/tasks";
     }
 
     @GetMapping
-    public MyResponse<List<TaskModel>> getAllTasks(HttpServletResponse response) {
+    public String getAllTasks(Model model) {
         List<TaskModel> allTasks = taskService.getAllTasks();
-        HttpStatus statusCode = HttpStatus.OK;
-        String message = "All tasks successfully retrieved";
-        if (allTasks.size() == 0) {
-            statusCode = HttpStatus.NOT_FOUND;
-            message = "There are no tasks available";
-        }
-        response.setStatus((statusCode.value()));
-        return new MyResponse<>(statusCode, message, allTasks);
+        model.addAttribute("tasks", allTasks);
+        return "task";
     }
 
-    @GetMapping
-    @RequestMapping("{id}")
-    public MyResponse<TaskModel> getATask(@PathVariable Integer id, HttpServletResponse response) {
+    @GetMapping("{id}")
+    public String getATask(Model model, @PathVariable Integer id) {
         TaskModel task = taskService.getATask(id);
-        String message = "Task successfully retrieved";
-        HttpStatus statusCode = HttpStatus.OK;
-        if (task == null) {
-            message = "Task not found";
-            statusCode = HttpStatus.NOT_FOUND;
-        }
-        response.setStatus(statusCode.value());
-        return new MyResponse<>(statusCode, message, task);
+        model.addAttribute("oneTask", task);
+        return "view-task";
     }
 
-    @GetMapping
-    @RequestMapping("/status/{status}")
+    @GetMapping("/status/{status}")
     public MyResponse<List<TaskModel>> getTasksByStatus(@PathVariable String status, HttpServletResponse response) {
         List<TaskModel> tasks = taskService.getTasksByStatus(status);
         String message = String.format("All %s tasks successfully retrieved", status);
@@ -75,17 +62,21 @@ public class TaskController {
         return new MyResponse<>(statusCode, message, tasks);
     }
 
-    @PatchMapping
-    @RequestMapping("{id}")
-    public MyResponse<TaskModel> getATask(@PathVariable Integer id, HttpServletResponse response) {
-        TaskModel task = taskService.getATask(id);
-        String message = "Task successfully retrieved";
-        HttpStatus statusCode = HttpStatus.OK;
-        if (task == null) {
-            message = "Task not found";
-            statusCode = HttpStatus.NOT_FOUND;
-        }
-        response.setStatus(statusCode.value());
-        return new MyResponse<>(statusCode, message, task);
+    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    public String getEditTask(@PathVariable Integer id, Model model) {
+        model.addAttribute("editTask", taskService.getATask(id));
+        return "edit";
+    }
+
+    @RequestMapping(value = "/edit/task/{id}", method = RequestMethod.POST)
+    public String editTask(@PathVariable Integer id, TaskModel task) {
+        taskService.editTask(id, task);
+        return "redirect:/tasks";
+    }
+
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    public String deleteATask(@PathVariable Integer id) {
+        taskService.deleteATask(id);
+        return "redirect:/tasks";
     }
 }

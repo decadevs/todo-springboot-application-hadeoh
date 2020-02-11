@@ -1,6 +1,7 @@
 package com.usman.todo.models;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -28,14 +29,14 @@ public class TaskModel {
     @Length(max = 500)
     private String description;
 
-    @Column(name = "status", columnDefinition = "varchar(255) default 'pending'")
+    @Column(name = "status")
     private String status;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private Timestamp createdAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 

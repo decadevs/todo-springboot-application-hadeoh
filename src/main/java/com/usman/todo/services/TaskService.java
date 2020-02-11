@@ -19,15 +19,9 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public TaskModel createTask(TaskModel task) {
-
-        TaskModel taskToBeCreated = null;
-        try {
-            taskToBeCreated = taskRepository.save(task);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
-        }
-        return taskToBeCreated;
+    public void createTask(TaskModel task) {
+        task.setStatus("pending");
+        taskRepository.save(task);
     }
 
     public List<TaskModel> getAllTasks() {
@@ -48,5 +42,24 @@ public class TaskService {
             return null;
         }
         return tasks;
+    }
+
+    public TaskModel editTask(Integer id, TaskModel task) {
+        TaskModel existingTask = taskRepository.findById(id).orElse(null);
+        if (existingTask != null) {
+            existingTask.setDescription(task.getDescription());
+            existingTask.setTitle(task.getTitle());
+            existingTask.setStatus(task.getStatus());
+            existingTask = taskRepository.save(existingTask);
+            if (existingTask.getStatus().equalsIgnoreCase("done")) {
+                existingTask.setCompletedAt(task.getUpdatedAt());
+            }
+            return existingTask;
+        }
+        return null;
+    }
+
+    public void deleteATask(Integer id) {
+        taskRepository.deleteById(id);
     }
 }

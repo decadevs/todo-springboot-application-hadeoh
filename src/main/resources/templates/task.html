@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Todo</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="todolist not-done">
+                <h1>Todo Items</h1>
+                <p class="errormsg"></p>
+                <a th:href="@{/tasks/add}" class="checkAll btn btn-success btn-todo">+</a>
+                <hr>
+                <div class="ml-3 mt-3" th:if="${not #lists.isEmpty(tasks)}">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Time Added</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tr-todo">
+                            <tr th:each = "task, iterator : ${tasks}">
+                                <td th:text="${iterator.count}"></td>
+                                <td><a th:text="${task.title}" th:href="@{'/tasks/' + ${task.id}}" class="text-decoration-none text-dark"></a></td>
+                                <td th:text="${task.status}"></td>
+                                <td th:text="${task.createdAt}"></td>
+                                <td><a th:href="@{'/tasks/edit/' + ${task.id}}" class="edit btn btn-primary btn-todo">Edit</a></td>
+                                <td><a th:href="@{'/tasks/delete/' + ${task.id}}" class="delete btn btn-outline-danger btn-todo">Delete</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

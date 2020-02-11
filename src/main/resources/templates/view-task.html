@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>View Contact</h1>
+    <a th:href="@{/tasks}">Back to Task List</a>
+    <br/><br/>
+    <div th:if="${oneTask}">
+        <table border="0">
+            <tr>
+                <td>Title</td>
+                <td>:</td>
+                <td th:text="${oneTask.title}">...</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>:</td>
+                <td th:text="${oneTask.description}">...</td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td>:</td>
+                <td th:text="${oneTask.status}">...</td>
+            </tr>
+            <tr>
+                <td>Created At</td>
+                <td>:</td>
+                <td th:utext="${oneTask.createdAt}">...</td>
+            </tr>
+            <tr>
+                <td>Updated At</td>
+                <td></td>
+                <td th:utext="${oneTask.updatedAt}">...</td>
+            </tr>
+            <tr>
+                <td>Completed At</td>
+                <td></td>
+                <td th:utext="${oneTask.completedAt}">...</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
